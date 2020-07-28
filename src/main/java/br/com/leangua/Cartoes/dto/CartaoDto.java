@@ -1,6 +1,4 @@
-package br.com.leangua.Cartao.dto;
-
-import br.com.leangua.Cartoes.models.Cartao;
+package br.com.leangua.Cartoes.dto;
 
 public class CartaoDto {
 

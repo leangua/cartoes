@@ -1,15 +1,13 @@
 package br.com.leangua.Cartoes.services;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import br.com.leangua.Cartao.dto.PagamentoDto;
 import br.com.leangua.Cartoes.exceptions.ValidacaoException;
 import br.com.leangua.Cartoes.models.Cartao;
 import br.com.leangua.Cartoes.models.Pagamento;
 import br.com.leangua.Cartoes.repositories.PagamentoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class PagamentoService {
@@ -21,8 +19,8 @@ public class PagamentoService {
 	PagamentoRepository pagamentoRepository;
 	
 	
-	public void efetuaPagamento(PagamentoDto pagamentoDto) {
-		Optional<Cartao> optional = cartaoService.buscarPorId(pagamentoDto.getCartaoId());
+	public void efetuaPagamento(Pagamento pagamento) {
+		Optional<Cartao> optional = cartaoService.buscarPorId(pagamento.getCartao().getId());
 	    
 	    if(!optional.isPresent()) {
 	      throw new ValidacaoException("cartao", "Cartão não encontrado");
@@ -31,10 +29,9 @@ public class PagamentoService {
 //	    if(!optional.get().getAtivo()) {
 //	        throw new ValidacaoException("cartao", "Cartão não ativo");
 //	    }
-	    
+
 	    Cartao cartao = optional.get();
-	    
-	    Pagamento pagamento = new Pagamento(cartao, pagamentoDto.getDescricao(), pagamentoDto.getValor());
+		pagamento.setCartao(cartao);
 
 	    pagamentoRepository.save(pagamento);
 	}
