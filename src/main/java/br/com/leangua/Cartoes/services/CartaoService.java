@@ -1,16 +1,14 @@
 package br.com.leangua.Cartoes.services;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import br.com.leangua.Cartao.dto.CartaoDto;
-import br.com.leangua.Cartao.dto.CartaoEntradaDto;
+import br.com.leangua.Cartoes.dto.CartaoDto;
 import br.com.leangua.Cartoes.exceptions.ValidacaoException;
 import br.com.leangua.Cartoes.models.Cartao;
 import br.com.leangua.Cartoes.models.Cliente;
 import br.com.leangua.Cartoes.repositories.CartaoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CartaoService {
@@ -21,9 +19,9 @@ public class CartaoService {
 	@Autowired
 	ClienteService clienteService;
 	
-	public CartaoDto criar(CartaoEntradaDto cartaoEntradaDto) {
+	public Cartao criar(Cartao cartao) {
 		
-		Optional<Cliente> optional = clienteService.buscaCliente(cartaoEntradaDto.getClienteId());
+		Optional<Cliente> optional = clienteService.buscaCliente(cartao.getCliente().getId());
 		
 		if (!optional.isPresent()) {
 			throw new ValidacaoException("cliente", "cliente não encontrado");
@@ -31,11 +29,12 @@ public class CartaoService {
 		
 		Cliente cliente = optional.get();
 		
-		Cartao cartao = new Cartao(cartaoEntradaDto.getNumero(), cliente);
-		
+		cartao.setCliente(cliente);
+		cartao.setAtivo(false);
+
 		cartaoRepository.save(cartao);
 		
-		return converter(cartao);
+		return cartao;
 	}
 	
 	public CartaoDto ativar(String numero) {

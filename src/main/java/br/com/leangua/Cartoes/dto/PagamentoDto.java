@@ -1,4 +1,4 @@
-package br.com.leangua.Cartao.dto;
+package br.com.leangua.Cartoes.dto;
 
 public class PagamentoDto {
 

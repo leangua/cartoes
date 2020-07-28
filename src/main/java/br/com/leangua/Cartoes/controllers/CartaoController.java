@@ -1,31 +1,32 @@
 package br.com.leangua.Cartoes.controllers;
 
-import javax.validation.Valid;
-
+import br.com.leangua.Cartoes.dto.*;
+import br.com.leangua.Cartoes.dto.CartaoEntradaDto;
+import br.com.leangua.Cartoes.models.Cartao;
+import br.com.leangua.Cartoes.services.CartaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import br.com.leangua.Cartao.dto.CartaoDto;
-import br.com.leangua.Cartao.dto.CartaoEntradaDto;
-import br.com.leangua.Cartoes.services.CartaoService;
+import javax.validation.Valid;
 
 @RestController
 public class CartaoController {
 	
 	@Autowired
 	CartaoService cartaoService;
+
+	@Autowired
+	Mapper mapper;
 	
 	@PostMapping("/cartao")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public CartaoDto criarCartao(@Valid @RequestBody CartaoEntradaDto cartaoEntradaDto) {
-		return cartaoService.criar(cartaoEntradaDto);
+		Cartao cartao = mapper.paraCartao(cartaoEntradaDto);
+
+		cartao = cartaoService.criar(cartao);
+
+		return mapper.paraCartaoDto(cartao);
 	}
 	
 	@PatchMapping("/cartao/{numero}")
